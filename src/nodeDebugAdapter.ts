@@ -2,7 +2,11 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { ChromeDebugAdapter, chromeUtils, ISourceMapPathOverrides, utils as CoreUtils, logger, telemetry as CoreTelemetry, Crdp, ChromeDebugSession, IOnPausedResult } from 'vscode-chrome-debug-core';
+import {
+    ChromeDebugAdapter, chromeUtils, ISourceMapPathOverrides, utils as CoreUtils, logger,
+    telemetry as CoreTelemetry, Crdp, ChromeDebugSession, IOnPausedResult
+}
+from 'vscode-chrome-debug-core';
 const telemetry = CoreTelemetry.telemetry;
 
 import { DebugProtocol } from 'vscode-debugprotocol';
@@ -148,6 +152,7 @@ export class NodeDebugAdapter extends ChromeDebugAdapter {
     }
 
     public async launch(args: ILaunchRequestArguments): Promise<void> {
+
         if (typeof args.enableSourceMapCaching !== 'boolean') {
             args.enableSourceMapCaching = this.isExtensionHost();
         }
@@ -157,6 +162,7 @@ export class NodeDebugAdapter extends ChromeDebugAdapter {
         }
 
         await super.launch(args);
+
         if (args.__restart && typeof args.__restart.port === 'number') {
             return this.doAttach(args.__restart.port, undefined, args.address, args.timeout);
         }
@@ -224,6 +230,7 @@ export class NodeDebugAdapter extends ChromeDebugAdapter {
                 logger.warn(localize('program.path.case.mismatch.warning', 'Program path uses differently cased character as file on disk; this might result in breakpoints not being hit.'));
             }
         }
+
 
         this._captureFromStd = args.outputCapture === 'std';
 
@@ -493,7 +500,7 @@ export class NodeDebugAdapter extends ChromeDebugAdapter {
             });
 
             resolve();
-         });
+        });
     }
 
     private captureStderr(nodeProcess: cp.ChildProcess, noDebugMode: boolean): void {
@@ -642,7 +649,7 @@ export class NodeDebugAdapter extends ChromeDebugAdapter {
     public async terminateSession(reason: string, args?: DebugProtocol.DisconnectArguments): Promise<void> {
         if (this.isExtensionHost() && args && typeof args.restart === 'boolean' && args.restart) {
             this.nodeProcessId = 0;
-        } else if (this._restartMode && !args)  {
+        } else if (this._restartMode && !args) {
             // If restart: true, only kill the process when the client has disconnected. 'args' present implies that a Disconnect request was received
             this.nodeProcessId = 0;
         }
@@ -907,7 +914,7 @@ export class NodeDebugAdapter extends ChromeDebugAdapter {
 
 function getSourceMapPathOverrides(cwd: string, sourceMapPathOverrides?: ISourceMapPathOverrides): ISourceMapPathOverrides {
     return sourceMapPathOverrides ? resolveCwdPattern(cwd, sourceMapPathOverrides, /*warnOnMissing=*/true) :
-            resolveCwdPattern(cwd, DefaultSourceMapPathOverrides, /*warnOnMissing=*/false);
+        resolveCwdPattern(cwd, DefaultSourceMapPathOverrides, /*warnOnMissing=*/false);
 }
 
 function fixNodeInternalsSkipFiles(args: ICommonRequestArgs): void {
@@ -966,7 +973,7 @@ export enum DebugArgs {
 
 const defaultDebugArgs = DebugArgs.InspectBrk;
 function detectSupportedDebugArgsForLaunch(config: ILaunchRequestArguments, runtimeExecutable: string, env: any): DebugArgs {
-    if (config.__nodeVersion || (config.runtimeVersion  && config.runtimeVersion !== 'default')) {
+    if (config.__nodeVersion || (config.runtimeVersion && config.runtimeVersion !== 'default')) {
         return getSupportedDebugArgsForVersion(config.__nodeVersion || config.runtimeVersion);
     } else if (config.runtimeExecutable) {
         logger.log('Using --inspect-brk because a runtimeExecutable is set');

@@ -199,7 +199,7 @@
         }
       },
       {
-        "type": "node2",
+        "type": "testnode",
         "label": "Node.js v6.3+",
         "program": "./out/src/nodeDebug.js",
         "runtime": "node",
@@ -207,7 +207,6 @@
         "configurationAttributes": {
           "launch": {
             "required": [
-              "cwd"
             ],
             "properties": {
               "program": {

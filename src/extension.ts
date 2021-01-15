@@ -40,6 +40,8 @@ class ExtensionHostDebugConfigurationProvider implements vscode.DebugConfigurati
 }
 
 function getWithoutDefault<T>(setting: string): T | undefined {
+    console.log(vscode.workspace.getConfiguration());
+
     const info = vscode.workspace.getConfiguration().inspect<T>(setting);
     return info?.workspaceValue ?? info?.globalValue;
 }
